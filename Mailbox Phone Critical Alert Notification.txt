@@ -1,0 +1,145 @@
+# This should be similar code to create a notification of when the mail is delivery
+# 
+# while trying to sace this config > Automations: error
+# intagration not found
+# Full view @ https://www.youtube.com/watch?v=9_9NU6EtkWI&t=586s
+
+# ***  See this Example by Everything Smart Home  @  https://youtu.be/v8fcwhko1k4?t=129 !!!!
+
+# *** See "What the heck is MQTT" Hive Mind Automation, on config MQTT and MATT Explorer which I've install on Leno & SYS5
+
+
+# Add in HA on 10.112 under Config > Integrations > Mosquitto Broker > Config > Listen to a topic > "sensor/mailbox"
+
+
+=========
+android doc
+https://companion.home-assistant.io/docs/notifications/critical-notifications/
+
+... Default notifications will not ring the phone until screen is turned on.  To override that behavior, set priority: 
+high and ttl: 0.  By default they also do not override "Do Not Disturb" settings, if you would like to override this 
+you will need to use "notification channels".
+
+- "Alarm Stream"
+You can also force the notification to play from the alarm stream so it will make the device ring even if on vibrate/silent
+ringer mode. Users on Android 7 and below can still use the channel example below as we are just using it to override the
+default notification behavior for sound. In order to make a notification show up immediately and make a sound regardless of
+ringer mode follow one of the examples below.
+
+Example 1:
+automations:
+  - alias: "Fire Detected Android alarm stream"
+    trigger:
+      - platform: state
+        entity_id: sensor.smoke_alarm
+        to: "smoke"
+
+    action:
+      - service: notify.mobile_app_<your_device_id_here>
+        data:
+          title: "Wake up!"
+          message: "The house is on fire and the cat's stuck in the dryer!"
+          data:
+            ttl: 0
+            priority: high
+            channel: alarm_stream
+			
+
+Example 2 - "Text To Speech Alarm Stream" to speak the notification:
+
+automations:
+  - alias: "Fire Detected TTS alarm"
+
+    trigger:
+      - platform: state
+        entity_id: sensor.smoke_alarm
+        to: "smoke"
+    action:
+      - service: notify.mobile_app_<your_device_id_here>
+        data:
+          title: "The house is on fire and the cat's stuck in the dryer!"
+          message: TTS
+          data:
+            ttl: 0
+            priority: high
+            channel: alarm_stream
+
+
+Example 3 - "Text To Speech Alarm Stream Max Volume" to make the notification speak as loud as it can, then revert back
+original volume level:
+
+automations:
+  - alias: "Fire Detected TTS loud"
+
+    trigger:
+      - platform: state
+        entity_id: sensor.smoke_alarm
+        to: "smoke"
+
+    action:
+      - service: notify.mobile_app_<your_device_id_here>
+        data:
+          title: "The house is on fire and the cat's stuck in the dryer!"
+          message: "TTS"
+          data:
+            ttl: 0
+            priority: high
+            channel: alarm_stream_max
+
+
+
+# Basic Example:
+automations:
+  - alias: "Fire Detected android"
+
+    trigger:
+      - platform: state
+        entity_id: sensor.smoke_alarm
+        to: "smoke"
+
+    action:
+      - service: notify.mobile_app_<your_device_id_here>
+        data:
+          title: "Wake up!"
+          message: "The house is on fire and the cat's stuck in the dryer!"
+          data:
+            ttl: 0
+            priority: high
+-----------------------------------------
+# bg modified for me:
+automations:
+  - alias: "Mailbox door opened"
+
+# This section needs to be update with the correct info.  Need to create the entity_id, what is "to:" ??
+    trigger:
+      - platform: state
+        entity_id: sensor.smoke_alarm
+        to: "smoke"
+
+    action:
+      - service: notify.mobile_app_moto_g_power_2021
+        data:
+          title: "Check Mailbox"
+          message: "Check for deliveries from Aliexpress?"
+          data:
+            ttl: 0
+            priority: high
+
+
+
+
+=============
+#YAML Code generated from walk through of video: in https://youtu.be/9_9NU6EtkWI?t=586
+service: notify.mobile_app_moto_g_power_2021
+data:
+  title: Yard Lamp OFF
+  message: Sunrise - Lamp OFF
+  data:
+    push:
+      sound:
+        name: default
+        critical: 1
+        volume: 1
+data:
+  message: Front Lamp Post Off
+  title: Sunrise
